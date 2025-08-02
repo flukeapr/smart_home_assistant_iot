@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_home_assistant_iot/presentation/home/widget/devices.dart';
 import 'package:smart_home_assistant_iot/presentation/home/widget/kilowatt_hour.dart';
 import 'package:smart_home_assistant_iot/presentation/home/widget/security_mode.dart';
 
@@ -32,6 +33,7 @@ class _HomeState extends State<Home> {
               ),
               KilowattHour(),
               SecurityMode(),
+              Devices(),
             ],
           ),
         ),
