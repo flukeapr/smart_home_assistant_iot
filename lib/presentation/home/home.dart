@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_assistant_iot/core/service/thingspeak.dart';
 import 'package:smart_home_assistant_iot/presentation/home/widget/kilowatt_hour.dart';
 import 'package:smart_home_assistant_iot/presentation/home/widget/security_mode.dart';
 
@@ -11,39 +10,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool turnOn = false;
-  final Thingspeak thingspeak = Thingspeak();
-
   @override
   void initState() {
     super.initState();
-    _getLedStatus();
-  }
-
-  Future<void> _toggleLed(bool isOn) async {
-    try {
-      final status = await thingspeak.toggleLed(isOn);
-      setState(() {
-        turnOn = status;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error toggling LED: $e')));
-    }
-  }
-
-  Future<void> _getLedStatus() async {
-    try {
-      final status = await thingspeak.getLedStatus();
-      setState(() {
-        turnOn = status;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error fetching LED status: $e')));
-    }
   }
 
   @override
@@ -57,11 +26,6 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 20,
             children: [
-              // SwitchListTile(
-              //   title: Text('LED Status : ${turnOn ? 'ON' : 'OFF'}'),
-              //   value: turnOn,
-              //   onChanged: _toggleLed,
-              // ),
               Text(
                 "Welcome back to Home",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

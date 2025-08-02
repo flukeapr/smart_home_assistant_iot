@@ -6,26 +6,28 @@ class Thingspeak {
   final String writeapiKey = dotenv.env['WRITE_API_KEY']!;
   final String channelId = dotenv.env['CHANNEL_ID']!;
   final dio = Dio();
-  Future<bool> toggleLed(bool isOn) async {
+
+  static final int ledField = 1;
+  static final int fanField = 2;
+  static final int doorField = 3;
+  static final int securityModeField = 4;
+  Future<bool> toggleField(int field, bool isOn) async {
     final String url =
-        'https://api.thingspeak.com/update?api_key=$writeapiKey&field1=${isOn ? 1 : 0}';
+        'https://api.thingspeak.com/update?api_key=$writeapiKey&field$field=${isOn ? 1 : 0}';
     final response = await dio.get(url);
     if (response.statusCode != 200) {
-      throw Exception('Failed to toggle LED');
+      throw Exception('Failed to toggle field $field');
     }
     return isOn;
   }
 
-  Future<bool> getLedStatus() async {
+  Future<bool> getFieldStatus(int field) async {
     final String url =
-        'https://api.thingspeak.com/channels/$channelId/fields/1/last.json?api_key=$readapiKey';
+        'https://api.thingspeak.com/channels/$channelId/fields/$field/last.txt?api_key=$readapiKey';
     final response = await dio.get(url);
-    if (response.statusCode == 200) {
-      final data = response.data;
-      final value = data['field1'];
-      return value == '1';
-    } else {
-      throw Exception('Failed to fetch LED status');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get field $field status');
     }
+    return response.data == '1';
   }
 }
