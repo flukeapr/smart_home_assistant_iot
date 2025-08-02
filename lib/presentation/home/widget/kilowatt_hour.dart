@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 
 class KilowattHour extends StatefulWidget {
@@ -9,33 +10,88 @@ class KilowattHour extends StatefulWidget {
 }
 
 class _KilowattHourState extends State<KilowattHour> {
+  static const double _iconSize = 40;
+  static const double _borderRadius = 15;
+  static const double _padding = 16;
+  static const double _containerHeight = 82;
+  double kWh = 0.0;
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 100,
+      height: _containerHeight,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.grey.shade300, width: 0.5),
+        borderRadius: BorderRadius.circular(_borderRadius),
+        border: Border.all(color: AppColor.lightGrey, width: 0.5),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(_padding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColor.primary, AppColor.secondary],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(100)),
-            ),
-            width: 40,
-            height: 40,
+        children: [_buildUsageInfo(), _buildNavigationButton()],
+      ),
+    );
+  }
+
+  Widget _buildUsageInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      spacing: 10,
+      children: [_buildGradientIcon(), _buildUsageText()],
+    );
+  }
+
+  Widget _buildGradientIcon() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColor.primary, AppColor.secondary],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      width: _iconSize,
+      height: _iconSize,
+      child: const Icon(Iconsax.flash_15, color: Colors.white, size: 24),
+    );
+  }
+
+  Widget _buildUsageText() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$kWh kWh',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: AppColor.darkGrey,
           ),
-        ],
+        ),
+        const Text(
+          'Electricity usage this month',
+          style: TextStyle(fontSize: 12, color: AppColor.darkGrey),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNavigationButton() {
+    return SizedBox(
+      width: _iconSize,
+      height: _iconSize,
+      child: IconButton(
+        style: IconButton.styleFrom(
+          backgroundColor: AppColor.grey.withAlpha((0.25 * 255).round()),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: () {},
+        icon: const Icon(Iconsax.arrow_right_1, color: Colors.white, size: 20),
       ),
     );
   }

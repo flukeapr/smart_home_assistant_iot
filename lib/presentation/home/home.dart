@@ -61,7 +61,10 @@ class _HomeState extends State<Home> {
               //   value: turnOn,
               //   onChanged: _toggleLed,
               // ),
-              Text("Welcome back to Home"),
+              Text(
+                "Welcome back to Home",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
               KilowattHour(),
             ],
           ),
