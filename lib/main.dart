@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:smart_home_assistant_iot/core/config/theme/app_theme.dart';
 import 'package:smart_home_assistant_iot/presentation/home/home.dart';
 
 Future<void> main() async {
@@ -26,6 +27,7 @@ class _MyAppState extends State<MyApp> {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: const Home(),
+      theme: AppTheme.lightTheme,
     );
   }
 }
