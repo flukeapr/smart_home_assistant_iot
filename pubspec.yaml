@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.2.1
+  iconify_flutter: ^0.0.7
   iconsax: ^0.0.8
 
 dev_dependencies:

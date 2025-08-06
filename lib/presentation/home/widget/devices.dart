@@ -18,18 +18,9 @@ class _DevicesState extends State<Devices> {
         spacing: 10,
         children: [
           _buildTitle(),
-          _buildDeviceCard(
-            "Living Room Light",
-            "Living Room",
-            Icons.lightbulb,
-            true,
-          ),
-          _buildDeviceCard(
-            "Living Room Light",
-            "Living Room",
-            Icons.lightbulb,
-            true,
-          ),
+          _buildDeviceCard("Light", "Living Room", Icons.lightbulb, true),
+          _buildDeviceCard("Fan", "Living Room", Icons.lightbulb, true),
+          _buildDeviceCard("Door", "Living Room", Icons.lightbulb, true),
         ],
       ),
     );
