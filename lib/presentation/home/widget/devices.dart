@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/heroicons.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
+import 'package:smart_home_assistant_iot/core/service/thingspeak.dart';
 
 class Devices extends StatefulWidget {
   const Devices({super.key});
@@ -15,24 +15,69 @@ class Devices extends StatefulWidget {
 }
 
 class _DevicesState extends State<Devices> {
-  bool lightStatus = true;
-  bool fanStatus = true;
+  Thingspeak thingspeak = Thingspeak();
+  bool lightStatus = false;
+  bool fanStatus = false;
   bool doorStatus = false;
 
   Future<void> _toggleDeviceStatus(String device) async {
+    bool currentStatus;
+    int field;
+
+    switch (device) {
+      case "Light":
+        field = Thingspeak.ledField;
+        currentStatus = lightStatus;
+        break;
+      case "Fan":
+        field = Thingspeak.fanField;
+        currentStatus = fanStatus;
+        break;
+      case "Door":
+        field = Thingspeak.doorField;
+        currentStatus = doorStatus;
+        break;
+      default:
+        return; // Invalid device
+    }
+
+    try {
+      bool newStatus = await thingspeak.toggleField(field, !currentStatus);
+      setState(() {
+        switch (device) {
+          case "Light":
+            lightStatus = newStatus;
+            break;
+          case "Fan":
+            fanStatus = newStatus;
+            break;
+          case "Door":
+            doorStatus = newStatus;
+            break;
+        }
+      });
+    } catch (e) {
+      // Handle error
+      print("Error toggling $device: $e");
+    }
+  }
+
+  Future<void> _getStatus() async {
+    lightStatus = await thingspeak.getFieldStatus(Thingspeak.ledField);
+    fanStatus = await thingspeak.getFieldStatus(Thingspeak.fanField);
+    doorStatus = await thingspeak.getFieldStatus(Thingspeak.doorField);
     setState(() {
-      switch (device) {
-        case 'Light':
-          lightStatus = !lightStatus;
-          break;
-        case 'Fan':
-          fanStatus = !fanStatus;
-          break;
-        case 'Door':
-          doorStatus = !doorStatus;
-          break;
-      }
+      lightStatus = lightStatus;
+      fanStatus = fanStatus;
+      doorStatus = doorStatus;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getStatus();
   }
 
   @override
@@ -76,7 +121,7 @@ class _DevicesState extends State<Devices> {
                 name: "Air Conditioner",
                 location: "Living Room",
                 icon: Ph.wind_bold,
-                isOn: true,
+                isOn: false,
               ),
             ],
           ),
