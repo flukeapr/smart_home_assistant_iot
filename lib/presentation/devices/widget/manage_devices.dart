@@ -7,20 +7,20 @@ import 'package:iconify_flutter/icons/wpf.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 import 'package:smart_home_assistant_iot/core/service/thingspeak.dart';
 
-class Devices extends StatefulWidget {
-  const Devices({super.key});
+class ManageDevices extends StatefulWidget {
+  const ManageDevices({super.key});
 
   @override
-  State<Devices> createState() => _DevicesState();
+  State<ManageDevices> createState() => _ManageDevicesState();
 }
 
-class _DevicesState extends State<Devices> {
+class _ManageDevicesState extends State<ManageDevices> {
   Thingspeak thingspeak = Thingspeak();
   bool lightStatus = false;
   bool fanStatus = false;
   bool doorStatus = false;
 
-  Future<void> _toggleDeviceStatus(String device) async {
+  Future<void> _toggleManageDevicestatus(String device) async {
     bool currentStatus;
     int field;
 
@@ -132,7 +132,7 @@ class _DevicesState extends State<Devices> {
 
   Widget _buildTitle() {
     return Text(
-      "Manage your devices",
+      "Manage your ManageDevices",
       style: TextStyle(fontSize: 16, color: AppColor.darkGrey),
     );
   }
@@ -215,13 +215,16 @@ class _DevicesState extends State<Devices> {
         Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: _buildDeviceStatus(isOn: isOn, device: name),
+          child: _buildManageDevicestatus(isOn: isOn, device: name),
         ),
       ],
     );
   }
 
-  Widget _buildDeviceStatus({required bool isOn, required String device}) {
+  Widget _buildManageDevicestatus({
+    required bool isOn,
+    required String device,
+  }) {
     return Row(
       children: [
         FlutterSwitch(
@@ -234,7 +237,7 @@ class _DevicesState extends State<Devices> {
           borderRadius: 20.0,
           padding: 2.0,
           onToggle: (val) {
-            _toggleDeviceStatus(device);
+            _toggleManageDevicestatus(device);
           },
         ),
         Spacer(),

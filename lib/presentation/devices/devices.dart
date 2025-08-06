@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_assistant_iot/presentation/home/widget/devices.dart';
-import 'package:smart_home_assistant_iot/presentation/home/widget/kilowatt_hour.dart';
-import 'package:smart_home_assistant_iot/presentation/home/widget/security_mode.dart';
+import 'package:smart_home_assistant_iot/presentation/devices/widget/manage_devices.dart';
+import 'package:smart_home_assistant_iot/presentation/devices/widget/kilowatt_hour.dart';
+import 'package:smart_home_assistant_iot/presentation/devices/widget/security_mode.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Devices extends StatefulWidget {
+  const Devices({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Devices> createState() => _DevicesState();
 }
 
-class _HomeState extends State<Home> {
+class _DevicesState extends State<Devices> {
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
               ),
               KilowattHour(),
               SecurityMode(),
-              Devices(),
+              ManageDevices(),
             ],
           ),
         ),
