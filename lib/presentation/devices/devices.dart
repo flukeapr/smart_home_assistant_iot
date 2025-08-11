@@ -33,6 +33,7 @@ class _DevicesState extends State<Devices> {
               ),
               KilowattHour(),
               SecurityMode(),
+              Spacer(),
               ManageDevices(),
             ],
           ),

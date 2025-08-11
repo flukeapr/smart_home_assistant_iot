@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:flutter_switch/flutter_switch.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 
 class SecurityMode extends StatefulWidget {
@@ -43,7 +45,11 @@ class _SecurityModeState extends State<SecurityMode> {
   }
 
   Widget _buildIconShield() {
-    return const Icon(Iconsax.shield_tick5, size: 32, color: AppColor.primary);
+    return const Iconify(
+      MaterialSymbols.security_rounded,
+      size: 32,
+      color: AppColor.primary,
+    );
   }
 
   Widget _buildSecurityText() {
@@ -74,6 +80,18 @@ class _SecurityModeState extends State<SecurityMode> {
   }
 
   Widget _buildToggleSwitch() {
-    return Switch(value: isOn, onChanged: _toggleSecurityMode);
+    return FlutterSwitch(
+      width: 47.0,
+      height: 23.0,
+      toggleSize: 18.0,
+      value: isOn,
+      activeColor: AppColor.primary,
+      inactiveColor: AppColor.lightGrey,
+      borderRadius: 20.0,
+      padding: 2.0,
+      onToggle: (val) {
+        _toggleSecurityMode(val);
+      },
+    );
   }
 }

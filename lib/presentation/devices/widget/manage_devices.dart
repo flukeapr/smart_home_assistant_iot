@@ -82,51 +82,48 @@ class _ManageDevicesState extends State<ManageDevices> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 15,
-        children: [
-          _buildTitle(),
-          GridView(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              childAspectRatio: 1.0,
-            ),
-            children: [
-              _buildDeviceCard(
-                name: "Light",
-                location: "Living Room",
-                icon: Ph.lightbulb,
-                isOn: lightStatus,
-              ),
-              _buildDeviceCard(
-                name: "Fan",
-                location: "Living Room",
-                icon: Wpf.fan,
-                isOn: fanStatus,
-              ),
-              _buildDeviceCard(
-                name: "Door",
-                location: "Living Room",
-                icon: MaterialSymbols.door_open_rounded,
-                isOn: doorStatus,
-              ),
-              _buildDeviceCard(
-                name: "Air Conditioner",
-                location: "Living Room",
-                icon: Ph.wind_bold,
-                isOn: false,
-              ),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 15,
+      children: [
+        _buildTitle(),
+        GridView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+            childAspectRatio: 1.0,
           ),
-        ],
-      ),
+          children: [
+            _buildDeviceCard(
+              name: "Light",
+              location: "Living Room",
+              icon: Ph.lightbulb,
+              isOn: lightStatus,
+            ),
+            _buildDeviceCard(
+              name: "Fan",
+              location: "Living Room",
+              icon: Wpf.fan,
+              isOn: fanStatus,
+            ),
+            _buildDeviceCard(
+              name: "Door",
+              location: "Living Room",
+              icon: MaterialSymbols.door_open_rounded,
+              isOn: doorStatus,
+            ),
+            _buildDeviceCard(
+              name: "Air Conditioner",
+              location: "Living Room",
+              icon: Ph.wind_bold,
+              isOn: false,
+            ),
+          ],
+        ),
+      ],
     );
   }
 

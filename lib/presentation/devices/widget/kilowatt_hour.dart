@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/bxs.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 
@@ -54,7 +56,8 @@ class _KilowattHourState extends State<KilowattHour> {
       ),
       width: _iconSize,
       height: _iconSize,
-      child: const Icon(Iconsax.flash_15, color: Colors.white, size: 24),
+      padding: EdgeInsets.all(8),
+      child: Iconify(Bxs.zap, color: Colors.white, size: 18),
     );
   }
 
