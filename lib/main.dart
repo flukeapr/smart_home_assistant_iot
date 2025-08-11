@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_theme.dart';
-import 'package:smart_home_assistant_iot/presentation/home/home.dart';
+import 'package:smart_home_assistant_iot/presentation/navigation/navigation.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: const Home(),
+      home: const Navigation(),
       theme: AppTheme.lightTheme,
     );
   }
