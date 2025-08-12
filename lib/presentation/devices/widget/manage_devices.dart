@@ -145,7 +145,7 @@ class _ManageDevicesState extends State<ManageDevices> {
       height: 155,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        border: isOn ? null : Border.all(color: AppColor.lightGrey, width: 1),
+        border: isOn ? null : Border.all(color: AppColor.lightGrey, width: 0.5),
         gradient: isOn
             ? LinearGradient(
                 begin: Alignment.topCenter,

@@ -33,7 +33,7 @@ class _NavigationState extends State<Navigation> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Container(
               height: 70,
               width: double.infinity,
