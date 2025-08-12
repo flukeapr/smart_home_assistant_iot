@@ -3,6 +3,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/devices.dart';
+import 'package:smart_home_assistant_iot/presentation/statistic/statistic.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -28,11 +29,11 @@ class _NavigationState extends State<Navigation> {
           Expanded(
             child: IndexedStack(
               index: _currentIndex,
-              children: const [Devices(), Placeholder()],
+              children: const [Devices(), Statistic()],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Container(
               height: 70,
               width: double.infinity,
