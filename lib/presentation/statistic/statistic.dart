@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_home_assistant_iot/presentation/statistic/widgets/chart_widget.dart';
 import 'package:smart_home_assistant_iot/presentation/statistic/widgets/goal_tracker.dart';
 
 class Statistic extends StatefulWidget {
@@ -18,8 +19,8 @@ class _StatisticState extends State<Statistic> {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 20,
-            children: [GoalTracker()],
+            spacing: 30,
+            children: [GoalTracker(), ChartWidget()],
           ),
         ),
       ),
