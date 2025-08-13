@@ -6,7 +6,6 @@ import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
-import 'package:smart_home_assistant_iot/core/service/thingspeak.dart';
 
 class ManageDevices extends StatefulWidget {
   const ManageDevices({super.key});
@@ -16,69 +15,12 @@ class ManageDevices extends StatefulWidget {
 }
 
 class _ManageDevicesState extends State<ManageDevices> {
-  Thingspeak thingspeak = Thingspeak();
-  // bool lightStatus = false;
-  // bool fanStatus = false;
-  // bool doorStatus = false;
-  final RealtimeDatabaseService dbService = RealtimeDatabaseService();
-  // Future<void> _toggleManageDevicestatus(String device) async {
-  //   bool currentStatus;
-  //   int field;
-
-  //   switch (device) {
-  //     case "Light":
-  //       field = Thingspeak.ledField;
-  //       currentStatus = lightStatus;
-  //       break;
-  //     case "Fan":
-  //       field = Thingspeak.fanField;
-  //       currentStatus = fanStatus;
-  //       break;
-  //     case "Door":
-  //       field = Thingspeak.doorField;
-  //       currentStatus = doorStatus;
-  //       break;
-  //     default:
-  //       return; // Invalid device
-  //   }
-
-  //   try {
-  //     bool newStatus = await thingspeak.toggleField(field, !currentStatus);
-  //     setState(() {
-  //       switch (device) {
-  //         case "Light":
-  //           lightStatus = newStatus;
-  //           break;
-  //         case "Fan":
-  //           fanStatus = newStatus;
-  //           break;
-  //         case "Door":
-  //           doorStatus = newStatus;
-  //           break;
-  //       }
-  //     });
-  //   } catch (e) {
-  //     // Handle error
-  //     print("Error toggling $device: $e");
-  //   }
-  // }
-
-  // Future<void> _getStatus() async {
-  //   lightStatus = await thingspeak.getFieldStatus(Thingspeak.ledField);
-  //   fanStatus = await thingspeak.getFieldStatus(Thingspeak.fanField);
-  //   doorStatus = await thingspeak.getFieldStatus(Thingspeak.doorField);
-  //   setState(() {
-  //     lightStatus = lightStatus;
-  //     fanStatus = fanStatus;
-  //     doorStatus = doorStatus;
-  //   });
-  // }
+  final RealtimeDatabaseService realtimeService = RealtimeDatabaseService();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _getStatus();
   }
 
   @override
@@ -119,7 +61,7 @@ class _ManageDevicesState extends State<ManageDevices> {
     required String icon,
   }) {
     return StreamBuilder<bool>(
-      stream: dbService.streamDeviceStatus(device),
+      stream: realtimeService.streamDeviceStatus(device),
       initialData: false,
       builder: (context, snapshot) {
         final isOn = snapshot.data ?? false;
@@ -130,7 +72,7 @@ class _ManageDevicesState extends State<ManageDevices> {
           icon: icon,
           isOn: isOn,
           onToggle: () {
-            dbService.setDeviceStatus(device, !isOn);
+            realtimeService.setDeviceStatus(device, !isOn);
           },
         );
       },
