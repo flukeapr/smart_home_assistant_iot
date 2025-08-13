@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "21636794277",
+    "firebase_url": "https://smart-home-assistant-73a6e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smart-home-assistant-73a6e",
+    "storage_bucket": "smart-home-assistant-73a6e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21636794277:android:b35ecdd9649a3dfcd08a4c",
+        "android_client_info": {
+          "package_name": "com.example.smart_home_assistant_iot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEkN31IHs1aAgF_CzSJ9P_aRNIN-pwM2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
