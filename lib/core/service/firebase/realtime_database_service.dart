@@ -21,4 +21,11 @@ class RealtimeDatabaseService {
       return val == 1 || val == true;
     });
   }
+
+  Future<void> setBulkDeviceStatus(Map<String, bool> devices) async {
+    final updates = devices.map(
+      (key, value) => MapEntry('/$key', value ? 1 : 0),
+    );
+    await _dbRef.update(updates);
+  }
 }

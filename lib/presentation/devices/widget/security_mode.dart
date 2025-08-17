@@ -78,14 +78,13 @@ class _SecurityModeState extends State<SecurityMode> {
 
   Future<void> _toggleSecurityMode(bool value) async {
     try {
-      await realtimeService.setDeviceStatus('securityMode', value);
-
-      if (value) {
-        final devices = ['Light', 'Fan', 'Door', 'Air Conditioner'];
-        for (var device in devices) {
-          await realtimeService.setDeviceStatus(device, false);
-        }
-      }
+      await realtimeService.setBulkDeviceStatus({
+        'securityMode': value,
+        'Light': false,
+        'Fan': false,
+        'Door': false,
+        'Air Conditioner': false,
+      });
 
       setState(() {});
     } catch (e) {
