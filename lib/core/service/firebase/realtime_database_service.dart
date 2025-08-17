@@ -12,11 +12,11 @@ class RealtimeDatabaseService {
   }
 
   Future<void> setDeviceStatus(String device, bool value) async {
-    await _dbRef.child("/$device").set(value ? 1 : 0);
+    await _dbRef.child("/Devices/$device").set(value ? 1 : 0);
   }
 
   Stream<bool> streamDeviceStatus(String device) {
-    return _dbRef.child("/$device").onValue.map((event) {
+    return _dbRef.child("/Devices/$device").onValue.map((event) {
       final val = event.snapshot.value;
       return val == 1 || val == true;
     });
@@ -24,7 +24,7 @@ class RealtimeDatabaseService {
 
   Future<void> setBulkDeviceStatus(Map<String, bool> devices) async {
     final updates = devices.map(
-      (key, value) => MapEntry('/$key', value ? 1 : 0),
+      (key, value) => MapEntry('/Devices/$key', value ? 1 : 0),
     );
     await _dbRef.update(updates);
   }
