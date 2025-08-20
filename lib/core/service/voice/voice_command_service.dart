@@ -23,8 +23,8 @@ class VoiceCommandService {
     );
   }
 
-  void stopListening() {
-    _speechToText.stop();
+  Future<void> stopListening() async {
+    await _speechToText.stop();
   }
 
   void _handleSpeechResult(SpeechRecognitionResult result) {
@@ -35,6 +35,14 @@ class VoiceCommandService {
           _realtimeDatabaseService.setDeviceStatus("Light", true);
         } else if (text.contains('ปิดไฟ')) {
           _realtimeDatabaseService.setDeviceStatus("Light", false);
+        } else if (text.contains('เปิดพัดลม')) {
+          _realtimeDatabaseService.setDeviceStatus("Fan", true);
+        } else if (text.contains('ปิดพัดลม')) {
+          _realtimeDatabaseService.setDeviceStatus("Fan", false);
+        } else if (text.contains('เปิดประตู')) {
+          _realtimeDatabaseService.setDeviceStatus("Door", true);
+        } else if (text.contains('ปิดประตู')) {
+          _realtimeDatabaseService.setDeviceStatus("Door", false);
         }
       }
     }
