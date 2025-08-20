@@ -16,6 +16,7 @@ dependencies:
   flutter_switch: ^0.3.2
   iconify_flutter: ^0.0.7
   iconsax: ^0.0.8
+  speech_to_text: ^7.3.0
 
 dev_dependencies:
   flutter_test:
