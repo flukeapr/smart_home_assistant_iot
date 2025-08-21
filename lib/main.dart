@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_theme.dart';
 import 'package:smart_home_assistant_iot/presentation/navigation/navigation.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final speechToText = SpeechToText();
+  await speechToText.initialize();
   runApp(const MyApp());
 }
 

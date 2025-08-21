@@ -5,7 +5,7 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
-import 'package:smart_home_assistant_iot/core/service/thingspeak.dart';
+import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 
 class ManageDevices extends StatefulWidget {
   const ManageDevices({super.key});
@@ -15,69 +15,12 @@ class ManageDevices extends StatefulWidget {
 }
 
 class _ManageDevicesState extends State<ManageDevices> {
-  Thingspeak thingspeak = Thingspeak();
-  bool lightStatus = false;
-  bool fanStatus = false;
-  bool doorStatus = false;
-
-  Future<void> _toggleManageDevicestatus(String device) async {
-    bool currentStatus;
-    int field;
-
-    switch (device) {
-      case "Light":
-        field = Thingspeak.ledField;
-        currentStatus = lightStatus;
-        break;
-      case "Fan":
-        field = Thingspeak.fanField;
-        currentStatus = fanStatus;
-        break;
-      case "Door":
-        field = Thingspeak.doorField;
-        currentStatus = doorStatus;
-        break;
-      default:
-        return; // Invalid device
-    }
-
-    try {
-      bool newStatus = await thingspeak.toggleField(field, !currentStatus);
-      setState(() {
-        switch (device) {
-          case "Light":
-            lightStatus = newStatus;
-            break;
-          case "Fan":
-            fanStatus = newStatus;
-            break;
-          case "Door":
-            doorStatus = newStatus;
-            break;
-        }
-      });
-    } catch (e) {
-      // Handle error
-      print("Error toggling $device: $e");
-    }
-  }
-
-  Future<void> _getStatus() async {
-    lightStatus = await thingspeak.getFieldStatus(Thingspeak.ledField);
-    fanStatus = await thingspeak.getFieldStatus(Thingspeak.fanField);
-    doorStatus = await thingspeak.getFieldStatus(Thingspeak.doorField);
-    setState(() {
-      lightStatus = lightStatus;
-      fanStatus = fanStatus;
-      doorStatus = doorStatus;
-    });
-  }
+  final RealtimeDatabaseService realtimeService = RealtimeDatabaseService();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getStatus();
   }
 
   @override
@@ -97,33 +40,42 @@ class _ManageDevicesState extends State<ManageDevices> {
             childAspectRatio: 1.0,
           ),
           children: [
-            _buildDeviceCard(
-              name: "Light",
-              location: "Living Room",
-              icon: Ph.lightbulb,
-              isOn: lightStatus,
-            ),
-            _buildDeviceCard(
-              name: "Fan",
-              location: "Living Room",
-              icon: Wpf.fan,
-              isOn: fanStatus,
-            ),
-            _buildDeviceCard(
-              name: "Door",
-              location: "Living Room",
+            _buildDeviceCardRealtime(device: "Light", icon: Ph.lightbulb),
+            _buildDeviceCardRealtime(device: "Fan", icon: Wpf.fan),
+            _buildDeviceCardRealtime(
+              device: "Door",
               icon: MaterialSymbols.door_open_rounded,
-              isOn: doorStatus,
             ),
-            _buildDeviceCard(
-              name: "Air Conditioner",
-              location: "Living Room",
+            _buildDeviceCardRealtime(
+              device: "Air Conditioner",
               icon: Ph.wind_bold,
-              isOn: false,
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildDeviceCardRealtime({
+    required String device,
+    required String icon,
+  }) {
+    return StreamBuilder<bool>(
+      stream: realtimeService.streamDeviceStatus(device),
+      initialData: false,
+      builder: (context, snapshot) {
+        final isOn = snapshot.data ?? false;
+
+        return _buildDeviceCard(
+          name: device,
+          location: "Living Room",
+          icon: icon,
+          isOn: isOn,
+          onToggle: () {
+            realtimeService.setDeviceStatus(device, !isOn);
+          },
+        );
+      },
     );
   }
 
@@ -139,6 +91,7 @@ class _ManageDevicesState extends State<ManageDevices> {
     required String location,
     required String icon,
     required bool isOn,
+    VoidCallback? onToggle,
   }) {
     return Container(
       width: 155,
@@ -168,7 +121,12 @@ class _ManageDevicesState extends State<ManageDevices> {
           spacing: 10,
           children: [
             _buildDeviceIcon(icon: icon, isOn: isOn),
-            _buildDeviceInfo(name: name, location: location, isOn: isOn),
+            _buildDeviceInfo(
+              name: name,
+              location: location,
+              isOn: isOn,
+              onToggle: onToggle,
+            ),
           ],
         ),
       ),
@@ -201,6 +159,7 @@ class _ManageDevicesState extends State<ManageDevices> {
     required String name,
     required String location,
     required bool isOn,
+    VoidCallback? onToggle,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +171,11 @@ class _ManageDevicesState extends State<ManageDevices> {
         Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: _buildManageDevicestatus(isOn: isOn, device: name),
+          child: _buildManageDevicestatus(
+            isOn: isOn,
+            device: name,
+            onToggle: onToggle,
+          ),
         ),
       ],
     );
@@ -221,6 +184,7 @@ class _ManageDevicesState extends State<ManageDevices> {
   Widget _buildManageDevicestatus({
     required bool isOn,
     required String device,
+    VoidCallback? onToggle,
   }) {
     return Row(
       children: [
@@ -234,7 +198,7 @@ class _ManageDevicesState extends State<ManageDevices> {
           borderRadius: 20.0,
           padding: 2.0,
           onToggle: (val) {
-            _toggleManageDevicestatus(device);
+            onToggle?.call();
           },
         ),
         Spacer(),

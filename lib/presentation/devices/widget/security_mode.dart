@@ -3,6 +3,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
+import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 
 class SecurityMode extends StatefulWidget {
   const SecurityMode({super.key});
@@ -15,7 +16,9 @@ class _SecurityModeState extends State<SecurityMode> {
   static const double _containerHeight = 82;
   static const double _borderRadius = 15;
   static const double _padding = 16;
-  bool isOn = false;
+
+  final RealtimeDatabaseService realtimeService = RealtimeDatabaseService();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -74,23 +77,37 @@ class _SecurityModeState extends State<SecurityMode> {
   }
 
   Future<void> _toggleSecurityMode(bool value) async {
-    setState(() {
-      isOn = value;
-    });
+    try {
+      await realtimeService.setBulkDeviceStatus({
+        'securityMode': value,
+        'Light': false,
+        'Fan': false,
+        'Door': false,
+        'Air Conditioner': false,
+      });
+
+      setState(() {});
+    } catch (e) {
+      print("Error toggling Security Mode: $e");
+    }
   }
 
   Widget _buildToggleSwitch() {
-    return FlutterSwitch(
-      width: 47.0,
-      height: 23.0,
-      toggleSize: 18.0,
-      value: isOn,
-      activeColor: AppColor.primary,
-      inactiveColor: AppColor.lightGrey,
-      borderRadius: 20.0,
-      padding: 2.0,
-      onToggle: (val) {
-        _toggleSecurityMode(val);
+    return StreamBuilder<bool>(
+      stream: realtimeService.streamDeviceStatus('securityMode'),
+      builder: (context, snapshot) {
+        final securityOn = snapshot.data ?? false;
+        return FlutterSwitch(
+          width: 47.0,
+          height: 23.0,
+          toggleSize: 18.0,
+          value: securityOn,
+          activeColor: AppColor.primary,
+          inactiveColor: AppColor.lightGrey,
+          borderRadius: 20.0,
+          padding: 2.0,
+          onToggle: _toggleSecurityMode,
+        );
       },
     );
   }
