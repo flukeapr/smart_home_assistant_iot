@@ -57,6 +57,7 @@ class _ChartWidgetState extends State<ChartWidget> {
           _buildChartInfo(),
           Spacer(),
           Row(
+            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             spacing: 15,

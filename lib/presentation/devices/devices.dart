@@ -24,19 +24,21 @@ class _DevicesState extends State<Devices> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 20,
-            children: [
-              Text(
-                "Welcome back to Home",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              KilowattHour(),
-              SecurityMode(),
-              ManageDevices(),
-              VoiceCommandButton(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 20,
+              children: [
+                Text(
+                  "Welcome back to Home",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                KilowattHour(),
+                SecurityMode(),
+                ManageDevices(),
+                VoiceCommandButton(),
+              ],
+            ),
           ),
         ),
       ),

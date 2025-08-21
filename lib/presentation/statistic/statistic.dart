@@ -18,10 +18,12 @@ class _StatisticState extends State<Statistic> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 30,
-            children: [GoalTracker(), ChartWidget(), TopPower()],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 30,
+              children: [GoalTracker(), ChartWidget(), TopPower()],
+            ),
           ),
         ),
       ),
