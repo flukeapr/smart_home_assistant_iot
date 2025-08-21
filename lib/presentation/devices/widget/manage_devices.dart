@@ -46,10 +46,7 @@ class _ManageDevicesState extends State<ManageDevices> {
               device: "Door",
               icon: MaterialSymbols.door_open_rounded,
             ),
-            _buildDeviceCardRealtime(
-              device: "Air Conditioner",
-              icon: Ph.wind_bold,
-            ),
+            _buildDeviceCardRealtime(device: "Light2", icon: Ph.lightbulb),
           ],
         ),
       ],
