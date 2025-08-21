@@ -32,8 +32,14 @@ class VoiceCommandService {
       String text = result.recognizedWords.toLowerCase();
       if (text.contains("smart home")) {
         if (text.contains('เปิดไฟ')) {
+          if (text.contains('นอกบ้าน')) {
+            _realtimeDatabaseService.setDeviceStatus("Light2", true);
+          }
           _realtimeDatabaseService.setDeviceStatus("Light", true);
         } else if (text.contains('ปิดไฟ')) {
+          if (text.contains('นอกบ้าน')) {
+            _realtimeDatabaseService.setDeviceStatus("Light2", false);
+          }
           _realtimeDatabaseService.setDeviceStatus("Light", false);
         } else if (text.contains('เปิดพัดลม')) {
           _realtimeDatabaseService.setDeviceStatus("Fan", true);
