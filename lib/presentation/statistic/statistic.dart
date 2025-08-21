@@ -21,7 +21,7 @@ class _StatisticState extends State<Statistic> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 30,
-            children: [GoalTracker(), ChartWidget(), Spacer(), TopPower()],
+            children: [GoalTracker(), ChartWidget(), TopPower()],
           ),
         ),
       ),

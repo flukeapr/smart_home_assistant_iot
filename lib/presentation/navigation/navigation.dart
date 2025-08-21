@@ -15,6 +15,8 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   int _currentIndex = 0;
 
+  final List<Widget> _pages = const [Devices(), Statistic()];
+
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -24,44 +26,35 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: IndexedStack(
-              index: _currentIndex,
-              children: const [Devices(), Statistic()],
-            ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Container(
+          height: 70,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: AppColor.lightGrey, width: 0.5),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: Container(
-              height: 70,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: AppColor.lightGrey, width: 0.5),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildNavItem(
+                label: "Devices",
+                icon: Ph.lightbulb,
+                isSelected: _currentIndex == 0,
+                onTap: () => _onTabTapped(0),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildNavItem(
-                    label: "Devices",
-                    icon: Ph.lightbulb,
-                    isSelected: _currentIndex == 0,
-                    onTap: () => _onTabTapped(0),
-                  ),
-                  _buildNavItem(
-                    label: "Statistics",
-                    icon: Ph.activity,
-                    isSelected: _currentIndex == 1,
-                    onTap: () => _onTabTapped(1),
-                  ),
-                ],
+              _buildNavItem(
+                label: "Statistics",
+                icon: Ph.activity,
+                isSelected: _currentIndex == 1,
+                onTap: () => _onTabTapped(1),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -78,7 +71,6 @@ class _NavigationState extends State<Navigation> {
         width: 150,
         height: 50,
         decoration: BoxDecoration(
-          color: isSelected ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(50),
           gradient: isSelected
               ? LinearGradient(
@@ -91,25 +83,21 @@ class _NavigationState extends State<Navigation> {
                   colors: [AppColor.primary, AppColor.secondary],
                 )
               : null,
+          color: isSelected ? null : Colors.transparent,
         ),
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Center(
-          child: Row(
-            spacing: 8,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Iconify(
-                icon,
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Iconify(icon, color: isSelected ? Colors.white : AppColor.darkGrey),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
                 color: isSelected ? Colors.white : AppColor.darkGrey,
               ),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : AppColor.darkGrey,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
