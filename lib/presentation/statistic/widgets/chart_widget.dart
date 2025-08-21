@@ -56,20 +56,23 @@ class _ChartWidgetState extends State<ChartWidget> {
         children: [
           _buildChartInfo(),
           Spacer(),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 15,
-            children: chartLabels.map((item) {
-              double val = item["value"];
-              return _buildBarChart(
-                value: val,
-                label: item["label"],
-                min: val == minValue,
-                max: val == maxValue,
-              );
-            }).toList(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              spacing: 15,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: chartLabels.map((item) {
+                double val = item["value"];
+                return _buildBarChart(
+                  value: val,
+                  label: item["label"],
+                  min: val == minValue,
+                  max: val == maxValue,
+                );
+              }).toList(),
+            ),
           ),
         ],
       ),
