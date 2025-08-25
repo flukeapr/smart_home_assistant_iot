@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/lucide.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
@@ -43,6 +42,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                     Text('Device Name: ${widget.deviceName}'),
                     // Add more device details here
                     _buildDeviceIcon(),
+                    _buildLevelsDevice(isOn: isOn),
                     Spacer(),
                     _buildStateDevice(isOn: isOn),
                   ],
@@ -70,6 +70,57 @@ class _DeviceDetailState extends State<DeviceDetail> {
     }
 
     return Iconify(getIconByName(), size: 100, color: AppColor.primary);
+  }
+
+  Widget _buildLevelsDevice({required bool isOn}) {
+    return StreamBuilder(
+      stream: realtimeService.streamDeviceLevels(widget.deviceName),
+      builder: (context, asyncSnapshot) {
+        final int level = asyncSnapshot.data ?? 1;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 10,
+          children: [
+            ...List.generate(3, (index) {
+              final bool selectLevel = level == index + 1;
+              return AbsorbPointer(
+                absorbing: !isOn,
+                child: GestureDetector(
+                  onTap: () {
+                    realtimeService.setDeviceLeves(
+                      widget.deviceName,
+                      index + 1,
+                    );
+                  },
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: !selectLevel
+                            ? AppColor.primary
+                            : Colors.transparent,
+                      ),
+                      shape: BoxShape.circle,
+                      color: selectLevel ? AppColor.primary : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        (index + 1).toString(),
+                        style: TextStyle(
+                          color: selectLevel ? Colors.white : AppColor.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildStateDevice({required bool isOn}) {
