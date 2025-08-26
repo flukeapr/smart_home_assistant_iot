@@ -39,11 +39,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
               child: Center(
                 child: Column(
                   children: [
-                    Text('Device Name: ${widget.deviceName}'),
-                    // Add more device details here
-                    _buildDeviceIcon(),
-                    _buildLevelsDevice(isOn: isOn),
-                    Spacer(),
+                    _buildBody(isOn: isOn),
                     _buildStateDevice(isOn: isOn),
                   ],
                 ),
@@ -55,10 +51,32 @@ class _DeviceDetailState extends State<DeviceDetail> {
     );
   }
 
-  Widget _buildDeviceIcon() {
+  Widget _buildBody({required bool isOn}) {
+    return StreamBuilder(
+      stream: realtimeService.streamDeviceLevels(widget.deviceName),
+      builder: (context, asyncSnapshot) {
+        final int level = asyncSnapshot.data ?? 1;
+        return Column(
+          children: [
+            _buildDeviceIcon(level: level),
+            _buildLevelsDevice(isOn: isOn),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildDeviceIcon({required int level}) {
     String getIconByName() {
       switch (widget.deviceName) {
         case 'Light':
+          if (level == 1) {
+            return Ph.lightbulb_filament;
+          } else if (level == 2) {
+            return Ph.lightbulb_filament_duotone;
+          } else if (level == 3) {
+            return Ph.lightbulb_filament_fill;
+          }
           return Ph.lightbulb;
         case 'Fan':
           return Wpf.fan;
@@ -69,7 +87,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
       }
     }
 
-    return Iconify(getIconByName(), size: 100, color: AppColor.primary);
+    return Iconify(getIconByName(), size: 150, color: AppColor.primary);
   }
 
   Widget _buildLevelsDevice({required bool isOn}) {
@@ -77,46 +95,84 @@ class _DeviceDetailState extends State<DeviceDetail> {
       stream: realtimeService.streamDeviceLevels(widget.deviceName),
       builder: (context, asyncSnapshot) {
         final int level = asyncSnapshot.data ?? 1;
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        return Column(
           spacing: 10,
           children: [
-            ...List.generate(3, (index) {
-              final bool selectLevel = level == index + 1;
-              return AbsorbPointer(
-                absorbing: !isOn,
-                child: GestureDetector(
-                  onTap: () {
-                    realtimeService.setDeviceLeves(
-                      widget.deviceName,
-                      index + 1,
-                    );
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: !selectLevel
-                            ? AppColor.primary
-                            : Colors.transparent,
-                      ),
-                      shape: BoxShape.circle,
-                      color: selectLevel ? AppColor.primary : null,
-                    ),
-                    child: Center(
-                      child: Text(
-                        (index + 1).toString(),
-                        style: TextStyle(
-                          color: selectLevel ? Colors.white : AppColor.grey,
-                          fontWeight: FontWeight.bold,
+            if (widget.deviceName != "Door")
+              Text(
+                (widget.deviceName == "Fan"
+                        ? "Speed Level"
+                        : "Brightness Level")
+                    .toUpperCase(),
+                style: TextStyle(fontSize: 16, color: AppColor.darkGrey),
+              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 20,
+              children: [
+                ...List.generate(3, (index) {
+                  final bool selectLevel = level == index + 1;
+                  return AbsorbPointer(
+                    absorbing: !isOn,
+                    child: GestureDetector(
+                      onTap: () {
+                        realtimeService.setDeviceLeves(
+                          widget.deviceName,
+                          index + 1,
+                        );
+                      },
+                      child: Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          gradient: selectLevel
+                              ? LinearGradient(
+                                  colors: [
+                                    AppColor.primary,
+                                    AppColor.secondary,
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                )
+                              : null,
+                          color: selectLevel ? null : Colors.white,
+                          boxShadow: !selectLevel
+                              ? [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ]
+                              : [],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(index + 1, (barIndex) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 2,
+                                ),
+                                width: 10,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: selectLevel
+                                      ? Colors.white
+                                      : AppColor.lightGrey,
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              );
+                            }),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            }),
+                  );
+                }),
+              ],
+            ),
           ],
         );
       },
@@ -131,7 +187,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
       child: Container(
         width: 80,
         height: 80,
-        margin: EdgeInsets.symmetric(vertical: 20),
+        margin: EdgeInsets.symmetric(vertical: 24),
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: isOn
