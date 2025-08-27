@@ -39,4 +39,24 @@ class RealtimeDatabaseService {
     );
     await _dbRef.update(updates);
   }
+
+  Stream<double> streamTemperature() {
+    return _dbRef.child("/temp").onValue.map((event) {
+      final val = event.snapshot.value;
+      if (val is int) return val.toDouble();
+      return val as double;
+    });
+  }
+
+  Stream<double> streamTemperatureDeviceAuto() {
+    return _dbRef.child("/tempset").onValue.map((event) {
+      final val = event.snapshot.value;
+      if (val is int) return val.toDouble();
+      return val as double;
+    });
+  }
+
+  Future<void> setTempDeviceAuto(double value) async {
+    await _dbRef.child("/tempset").set(value);
+  }
 }

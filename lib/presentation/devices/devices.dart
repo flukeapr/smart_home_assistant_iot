@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/manage_devices.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/kilowatt_hour.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/security_mode.dart';
+import 'package:smart_home_assistant_iot/presentation/devices/widget/temperature.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/voice_command_button.dart';
 
 class Devices extends StatefulWidget {
@@ -33,8 +34,9 @@ class _DevicesState extends State<Devices> {
                   "Welcome back to Home",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
-                KilowattHour(),
+                // KilowattHour(),
                 SecurityMode(),
+                Temperature(),
                 ManageDevices(),
                 VoiceCommandButton(),
               ],
