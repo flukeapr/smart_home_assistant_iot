@@ -7,6 +7,7 @@ environment:
   sdk: ^3.8.0
 
 dependencies:
+  cloud_firestore: ^6.0.0
   dio: ^5.8.0+1
   firebase_core: ^4.0.0
   firebase_database: ^12.0.0
@@ -16,6 +17,7 @@ dependencies:
   flutter_switch: ^0.3.2
   iconify_flutter: ^0.0.7
   iconsax: ^0.0.8
+  sleek_circular_slider: ^2.1.0
   speech_to_text: ^7.3.0
   flutter_tts: ^3.8.5
 

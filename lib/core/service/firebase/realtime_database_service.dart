@@ -22,6 +22,17 @@ class RealtimeDatabaseService {
     });
   }
 
+  Stream<int> streamDeviceLevels(String device) {
+    return _dbRef.child("/Levels/$device").onValue.map((event) {
+      final val = event.snapshot.value;
+      return val is int ? val : 0;
+    });
+  }
+
+  Future<void> setDeviceLeves(String device, int value) async {
+    await _dbRef.child("/Levels/$device").set(value);
+  }
+
   Future<void> setBulkDeviceStatus(Map<String, bool> devices) async {
     final updates = devices.map(
       (key, value) => MapEntry('/Devices/$key', value ? 1 : 0),

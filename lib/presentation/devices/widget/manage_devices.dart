@@ -6,6 +6,7 @@ import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
+import 'package:smart_home_assistant_iot/presentation/devices/pages/device_detail.dart';
 
 class ManageDevices extends StatefulWidget {
   const ManageDevices({super.key});
@@ -63,14 +64,24 @@ class _ManageDevicesState extends State<ManageDevices> {
       builder: (context, snapshot) {
         final isOn = snapshot.data ?? false;
 
-        return _buildDeviceCard(
-          name: device,
-          location: "Living Room",
-          icon: icon,
-          isOn: isOn,
-          onToggle: () {
-            realtimeService.setDeviceStatus(device, !isOn);
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DeviceDetail(deviceName: device),
+              ),
+            );
           },
+          child: _buildDeviceCard(
+            name: device,
+            location: "Living Room",
+            icon: icon,
+            isOn: isOn,
+            onToggle: () {
+              realtimeService.setDeviceStatus(device, !isOn);
+            },
+          ),
         );
       },
     );
