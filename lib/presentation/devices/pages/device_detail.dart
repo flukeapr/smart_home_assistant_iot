@@ -3,6 +3,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/ph.dart';
 import 'package:iconify_flutter/icons/wpf.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
 import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 
@@ -39,8 +40,28 @@ class _DeviceDetailState extends State<DeviceDetail> {
               child: Center(
                 child: Column(
                   children: [
-                    _buildBody(isOn: isOn),
-                    _buildStateDevice(isOn: isOn),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Living Room'),
+                        Iconify(
+                          MaterialSymbols.keyboard_arrow_down,
+                          size: 20,
+                          color: AppColor.darkGrey,
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildBody(isOn: isOn),
+                          if (widget.deviceName != "Door")
+                            _buildLevelsDevice(isOn: isOn),
+                          _buildStateDevice(isOn: isOn),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -57,16 +78,13 @@ class _DeviceDetailState extends State<DeviceDetail> {
       builder: (context, asyncSnapshot) {
         final int level = asyncSnapshot.data ?? 1;
         return Column(
-          children: [
-            _buildDeviceIcon(level: level),
-            _buildLevelsDevice(isOn: isOn),
-          ],
+          children: [_buildDeviceIcon(level: level, isOn: isOn)],
         );
       },
     );
   }
 
-  Widget _buildDeviceIcon({required int level}) {
+  Widget _buildDeviceIcon({required int level, required bool isOn}) {
     String getIconByName() {
       switch (widget.deviceName) {
         case 'Light':
@@ -87,7 +105,39 @@ class _DeviceDetailState extends State<DeviceDetail> {
       }
     }
 
-    return Iconify(getIconByName(), size: 150, color: AppColor.primary);
+    return AbsorbPointer(
+      absorbing: !isOn,
+      child: SleekCircularSlider(
+        min: 1,
+        max: 3,
+        initialValue: level.toDouble(),
+        appearance: CircularSliderAppearance(
+          size: 250, // ขนาดวงกลม
+          startAngle: 180, // เริ่มครึ่งวงกลมด้านบน
+          angleRange: 180, // โชว์แค่ครึ่งวงกลม
+          customWidths: CustomSliderWidths(
+            trackWidth: 8,
+            progressBarWidth: 8,
+            handlerSize: 12,
+          ),
+          customColors: CustomSliderColors(
+            trackColor: AppColor.lightGrey,
+            progressBarColor: AppColor.primary,
+            dotColor: AppColor.secondary,
+          ),
+        ),
+        onChangeEnd: (double value) {
+          int newLevel = value.round();
+          if (isOn) {
+            realtimeService.setDeviceLeves(widget.deviceName, newLevel);
+          }
+        },
+        innerWidget: (_) => Padding(
+          padding: const EdgeInsets.all(50),
+          child: Iconify(getIconByName(), size: 10, color: AppColor.primary),
+        ),
+      ),
+    );
   }
 
   Widget _buildLevelsDevice({required bool isOn}) {
