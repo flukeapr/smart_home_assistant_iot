@@ -22,14 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.example.smart_home_assistant_iot"
 
-        // ❌ เดิม (ผิดสำหรับ .kts)
-        // minSdkVersion flutter.minSdkVersion
-        // targetSdk flutter.targetSdkVersion
-        // versionCode flutter.versionCode
-        // versionName flutter.versionName
-
-        // ✅ แก้เป็นแบบนี้
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
