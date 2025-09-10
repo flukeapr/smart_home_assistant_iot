@@ -34,7 +34,7 @@ class _DevicesState extends State<Devices> {
                   "Welcome back to Home",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
-                // KilowattHour(),
+                KilowattHour(),
                 SecurityMode(),
                 Temperature(),
                 ManageDevices(),

@@ -130,27 +130,38 @@ class _TemperatureState extends State<Temperature> {
                         onTap: () {
                           realtimeDatabaseService.setTempDeviceAuto(temp + 1);
                         },
-                        child: const Icon(
-                          Icons.keyboard_arrow_up,
-                          size: 32,
-                          color: AppColor.darkGrey,
+                        child: Container(
+                          width: 40,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColor.lightGrey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.keyboard_arrow_up,
+                            size: 32,
+                            color: AppColor.darkGrey,
+                          ),
                         ),
                       ),
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 300),
-                        transitionBuilder: (child, animation) {
-                          return ScaleTransition(
-                            scale: animation,
-                            child: child,
-                          );
-                        },
-                        child: Text(
-                          "${temp.toInt()}°C",
-                          key: ValueKey(temp.toInt()),
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.primary,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: Text(
+                            "${temp.toInt()}°C",
+                            key: ValueKey(temp.toInt()),
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.primary,
+                            ),
                           ),
                         ),
                       ),
@@ -158,10 +169,18 @@ class _TemperatureState extends State<Temperature> {
                         onTap: () {
                           realtimeDatabaseService.setTempDeviceAuto(temp - 1);
                         },
-                        child: const Icon(
-                          Icons.keyboard_arrow_down,
-                          size: 32,
-                          color: AppColor.darkGrey,
+                        child: Container(
+                          width: 40,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColor.lightGrey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 32,
+                            color: AppColor.darkGrey,
+                          ),
                         ),
                       ),
                     ],
