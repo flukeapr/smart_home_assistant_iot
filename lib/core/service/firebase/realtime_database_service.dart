@@ -67,4 +67,16 @@ class RealtimeDatabaseService {
       return val as double;
     });
   }
+
+  Stream<double> streamMaxKilowattHour() {
+    return _dbRef.child("/maxKWH").onValue.map((event) {
+      final val = event.snapshot.value;
+      if (val is int) return val.toDouble();
+      return val as double;
+    });
+  }
+
+  Future<void> setMaxKilowattHour(double value) async {
+    await _dbRef.child("/maxKWH").set(value);
+  }
 }
