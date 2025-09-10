@@ -6,7 +6,8 @@ import 'package:smart_home_assistant_iot/presentation/devices/widget/temperature
 import 'package:smart_home_assistant_iot/presentation/devices/widget/voice_command_button.dart';
 
 class Devices extends StatefulWidget {
-  const Devices({super.key});
+  final VoidCallback onGoToStatistic;
+  const Devices({super.key, required this.onGoToStatistic});
 
   @override
   State<Devices> createState() => _DevicesState();
@@ -34,7 +35,7 @@ class _DevicesState extends State<Devices> {
                   "Welcome back to Home",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
-                KilowattHour(),
+                KilowattHour(onTap: () => widget.onGoToStatistic()),
                 SecurityMode(),
                 Temperature(),
                 ManageDevices(),

@@ -15,12 +15,22 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [Devices(), Statistic()];
+  final List<Widget> _pages = [];
 
   void _onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pages.addAll([
+      Devices(onGoToStatistic: () => _onTabTapped(1)),
+      const Statistic(),
+    ]);
   }
 
   @override

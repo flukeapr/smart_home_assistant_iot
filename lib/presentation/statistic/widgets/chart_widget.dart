@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bxs.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
+import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 
 class ChartWidget extends StatefulWidget {
   const ChartWidget({super.key});
@@ -11,16 +12,23 @@ class ChartWidget extends StatefulWidget {
 }
 
 class _ChartWidgetState extends State<ChartWidget> {
-  final double usage = 50.2;
-  final List<Map<String, dynamic>> chartLabels = [
-    {"label": "Mon", "value": 124.0},
-    {"label": "Tue", "value": 110.0},
-    {"label": "Wed", "value": 90.0},
-    {"label": "Thu", "value": 80.0},
-    {"label": "Fri", "value": 150.0},
-    {"label": "Sat", "value": 134.0},
-    {"label": "Sun", "value": 170.0},
-  ];
+  final RealtimeDatabaseService realtimeService = RealtimeDatabaseService();
+  List<Map<String, dynamic>> chartLabels = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadWeeklyEnergy();
+  }
+
+  void loadWeeklyEnergy() async {
+    final data = await realtimeService.getWeeklyEnergy();
+    setState(() {
+      chartLabels = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -35,12 +43,17 @@ class _ChartWidgetState extends State<ChartWidget> {
   }
 
   Widget _buildChart() {
-    double minValue = chartLabels
-        .map((e) => e["value"] as double)
-        .reduce((a, b) => a < b ? a : b);
-    double maxValue = chartLabels
-        .map((e) => e["value"] as double)
-        .reduce((a, b) => a > b ? a : b);
+    double minValue = chartLabels.isNotEmpty
+        ? chartLabels
+              .map((e) => e["value"] as double)
+              .reduce((a, b) => a < b ? a : b)
+        : 0.0;
+
+    double maxValue = chartLabels.isNotEmpty
+        ? chartLabels
+              .map((e) => e["value"] as double)
+              .reduce((a, b) => a > b ? a : b)
+        : 1.0;
 
     return Container(
       width: double.infinity,
@@ -69,6 +82,7 @@ class _ChartWidgetState extends State<ChartWidget> {
                   value: val,
                   label: item["label"],
                   min: val == minValue,
+                  maxValue: maxValue,
                   max: val == maxValue,
                 );
               }).toList(),
@@ -85,13 +99,19 @@ class _ChartWidgetState extends State<ChartWidget> {
       children: [
         Row(
           children: [
-            Text(
-              usage.toString(),
-              style: TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                color: AppColor.primary,
-              ),
+            StreamBuilder(
+              stream: realtimeService.streamMonthlyEnergy(),
+              builder: (context, asyncSnapshot) {
+                double usage = asyncSnapshot.data ?? 0.0;
+                return Text(
+                  usage.toStringAsFixed(2),
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                    color: AppColor.primary,
+                  ),
+                );
+              },
             ),
             Text(
               ' kWh',
@@ -134,15 +154,18 @@ class _ChartWidgetState extends State<ChartWidget> {
   Widget _buildBarChart({
     required double value,
     required String label,
+    required double maxValue,
     bool min = false,
     bool max = false,
   }) {
+    final chartMaxHeight = 150.0;
+    double height = (value / maxValue) * chartMaxHeight;
     return Column(
       spacing: 4,
       children: [
         Container(
           width: 32,
-          height: value,
+          height: height,
           decoration: BoxDecoration(
             gradient: min || max
                 ? LinearGradient(

@@ -3,9 +3,11 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bxs.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:smart_home_assistant_iot/core/config/theme/app_color.dart';
+import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 
 class KilowattHour extends StatefulWidget {
-  const KilowattHour({super.key});
+  final VoidCallback onTap;
+  const KilowattHour({super.key, required this.onTap});
 
   @override
   State<KilowattHour> createState() => _KilowattHourState();
@@ -17,6 +19,7 @@ class _KilowattHourState extends State<KilowattHour> {
   static const double _padding = 16;
   static const double _containerHeight = 82;
   double kWh = 0.0;
+  final RealtimeDatabaseService realtimeService = RealtimeDatabaseService();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,23 +65,29 @@ class _KilowattHourState extends State<KilowattHour> {
   }
 
   Widget _buildUsageText() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$kWh kWh',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColor.darkGrey,
-          ),
-        ),
-        const Text(
-          'Electricity usage this month',
-          style: TextStyle(fontSize: 12, color: AppColor.darkGrey),
-        ),
-      ],
+    return StreamBuilder(
+      stream: realtimeService.streamMonthlyEnergy(),
+      builder: (context, asyncSnapshot) {
+        kWh = asyncSnapshot.data ?? 0.0;
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${kWh.toStringAsFixed(2)} kWh',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: AppColor.darkGrey,
+              ),
+            ),
+            const Text(
+              'Electricity usage this month',
+              style: TextStyle(fontSize: 12, color: AppColor.darkGrey),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -93,7 +102,9 @@ class _KilowattHourState extends State<KilowattHour> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          widget.onTap();
+        },
         icon: const Icon(Iconsax.arrow_right_1, color: Colors.white, size: 20),
       ),
     );
