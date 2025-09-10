@@ -36,13 +36,13 @@ class _GoalTrackerState extends State<GoalTracker> {
 
   Widget _buildProgressContainer() {
     return StreamBuilder<double>(
-      stream: _realtimeDatabaseService.streamKilowattHour(),
+      stream: _realtimeDatabaseService.streamMonthlyEnergy(),
       builder: (context, usageSnapshot) {
         return StreamBuilder<double>(
-          stream: _realtimeDatabaseService.streamMaxKilowattHour(),
+          stream: _realtimeDatabaseService.streamMaxEnergy(),
           builder: (context, maxSnapshot) {
             final usage = usageSnapshot.data ?? 0.0;
-            final maximum = maxSnapshot.data ?? 1.0; // กันหาร 0
+            final maximum = maxSnapshot.data ?? 1.0;
 
             return Container(
               width: double.infinity,
@@ -64,7 +64,7 @@ class _GoalTrackerState extends State<GoalTracker> {
                           children: [
                             _buildIcon(),
                             Text(
-                              'Goal Progress: ${usage.toStringAsFixed(1)} / ${maximum.toStringAsFixed(1)} kWh',
+                              'Goal Progress: ${usage.toStringAsFixed(2)} / ${maximum.toStringAsFixed(1)} kWh',
                             ),
                           ],
                         ),
@@ -110,8 +110,67 @@ class _GoalTrackerState extends State<GoalTracker> {
 
   Widget _buildEditButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        dialogChangeTemperature();
+      },
       child: Iconify(Mdi.dots_vertical, color: AppColor.darkGrey),
+    );
+  }
+
+  Future<void> dialogChangeTemperature() async {
+    await showDialog<double>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 120,
+            padding: const EdgeInsets.all(18.0),
+            child: StreamBuilder<double>(
+              stream: _realtimeDatabaseService.streamMaxEnergy(),
+              initialData: 24.0, // ค่าเริ่มต้น
+              builder: (context, snapshot) {
+                final value = snapshot.data ?? 1.0;
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 4,
+                  children: [
+                    Text(
+                      'Set Goal',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.darkGrey,
+                      ),
+                    ),
+                    Text(
+                      '${value.toStringAsFixed(1)} kWh / 100 kWh',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: AppColor.darkGrey,
+                      ),
+                    ),
+
+                    Slider(
+                      value: value,
+                      min: 1,
+                      max: 100,
+                      thumbColor: AppColor.primary,
+                      activeColor: AppColor.secondary,
+                      onChanged: (newValue) {
+                        _realtimeDatabaseService.setMaxEnergy(newValue);
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

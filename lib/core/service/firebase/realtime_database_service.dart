@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
 
 class RealtimeDatabaseService {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
@@ -60,15 +61,7 @@ class RealtimeDatabaseService {
     await _dbRef.child("/tempset").set(value);
   }
 
-  Stream<double> streamKilowattHour() {
-    return _dbRef.child("/kwh").onValue.map((event) {
-      final val = event.snapshot.value;
-      if (val is int) return val.toDouble();
-      return val as double;
-    });
-  }
-
-  Stream<double> streamMaxKilowattHour() {
+  Stream<double> streamMaxEnergy() {
     return _dbRef.child("/maxKWH").onValue.map((event) {
       final val = event.snapshot.value;
       if (val is int) return val.toDouble();
@@ -76,7 +69,30 @@ class RealtimeDatabaseService {
     });
   }
 
-  Future<void> setMaxKilowattHour(double value) async {
+  Future<void> setMaxEnergy(double value) async {
     await _dbRef.child("/maxKWH").set(value);
+  }
+
+  Stream<double> streamMonthlyEnergy() {
+    final ref = FirebaseDatabase.instance.ref('energy_usage');
+
+    return ref.onValue.map((event) {
+      double sum = 0;
+      final snapshot = event.snapshot;
+
+      if (snapshot.exists) {
+        final data = snapshot.value as Map<dynamic, dynamic>;
+        final now = DateTime.now();
+        final currentMonth = DateFormat('yyyy-MM').format(now);
+
+        data.forEach((key, value) {
+          if (key.startsWith(currentMonth)) {
+            sum += (value is int) ? value.toDouble() : value as double;
+          }
+        });
+      }
+
+      return sum;
+    });
   }
 }

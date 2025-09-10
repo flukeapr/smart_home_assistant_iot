@@ -66,7 +66,7 @@ class _KilowattHourState extends State<KilowattHour> {
 
   Widget _buildUsageText() {
     return StreamBuilder(
-      stream: realtimeService.streamKilowattHour(),
+      stream: realtimeService.streamMonthlyEnergy(),
       builder: (context, asyncSnapshot) {
         kWh = asyncSnapshot.data ?? 0.0;
         return Column(
@@ -74,7 +74,7 @@ class _KilowattHourState extends State<KilowattHour> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '$kWh kWh',
+              '${kWh.toStringAsFixed(2)} kWh',
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
