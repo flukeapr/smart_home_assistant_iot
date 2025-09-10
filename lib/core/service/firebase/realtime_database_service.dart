@@ -95,4 +95,40 @@ class RealtimeDatabaseService {
       return sum;
     });
   }
+
+  Future<List<Map<String, dynamic>>> getWeeklyEnergy() async {
+    final ref = FirebaseDatabase.instance.ref('energy_usage');
+    final snapshot = await ref.get();
+
+    // สร้าง Map เก็บค่า energy ต่อวัน
+    Map<String, double> dailyEnergy = {};
+
+    if (snapshot.exists) {
+      final data = snapshot.value as Map<dynamic, dynamic>;
+
+      data.forEach((key, value) {
+        // key = '2025-09-10', value = 0.0495
+        final date = DateTime.tryParse(key);
+        if (date != null) {
+          String weekday = DateFormat('E').format(date); // Mon, Tue, ...
+          double energy = (value is int) ? value.toDouble() : value as double;
+          dailyEnergy[weekday] = (dailyEnergy[weekday] ?? 0) + energy;
+        }
+      });
+    }
+
+    // สร้าง list 7 วัน (Mon-Sun)
+    final List<String> weekdays = [
+      'Mon',
+      'Tue',
+      'Wed',
+      'Thu',
+      'Fri',
+      'Sat',
+      'Sun',
+    ];
+    return weekdays.map((day) {
+      return {"label": day, "value": dailyEnergy[day] ?? 0.0};
+    }).toList();
+  }
 }
