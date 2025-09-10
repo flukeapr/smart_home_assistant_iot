@@ -59,4 +59,12 @@ class RealtimeDatabaseService {
   Future<void> setTempDeviceAuto(double value) async {
     await _dbRef.child("/tempset").set(value);
   }
+
+  Stream<double> streamKilowattHour() {
+    return _dbRef.child("/kwh").onValue.map((event) {
+      final val = event.snapshot.value;
+      if (val is int) return val.toDouble();
+      return val as double;
+    });
+  }
 }
