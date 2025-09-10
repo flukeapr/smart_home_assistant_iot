@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/manage_devices.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/kilowatt_hour.dart';
-import 'package:smart_home_assistant_iot/presentation/devices/widget/security_mode.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/temperature.dart';
 import 'package:smart_home_assistant_iot/presentation/devices/widget/voice_command_button.dart';
 
@@ -36,7 +35,6 @@ class _DevicesState extends State<Devices> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 KilowattHour(onTap: () => widget.onGoToStatistic()),
-                SecurityMode(),
                 Temperature(),
                 ManageDevices(),
                 VoiceCommandButton(),
