@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_home_assistant_iot/presentation/statistic/widgets/chart_widget.dart';
 import 'package:smart_home_assistant_iot/presentation/statistic/widgets/goal_tracker.dart';
-import 'package:smart_home_assistant_iot/presentation/statistic/widgets/top_power.dart';
+import 'package:smart_home_assistant_iot/presentation/statistic/widgets/saving_mode.dart';
+import 'package:smart_home_assistant_iot/presentation/statistic/widgets/security_mode.dart';
 
 class Statistic extends StatefulWidget {
   const Statistic({super.key});
@@ -21,8 +22,13 @@ class _StatisticState extends State<Statistic> {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 30,
-              children: [GoalTracker(), ChartWidget(), TopPower()],
+              spacing: 20,
+              children: [
+                GoalTracker(),
+                SavingMode(),
+                SecurityMode(),
+                ChartWidget(),
+              ],
             ),
           ),
         ),
