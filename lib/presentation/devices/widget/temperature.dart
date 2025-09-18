@@ -33,7 +33,7 @@ class _TemperatureState extends State<Temperature> {
       builder: (context, asyncSnapshot) {
         final temperature = asyncSnapshot.data ?? 0.0;
         return Container(
-          width: 160,
+          width: 150,
           height: _containerHeight,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -203,7 +203,7 @@ class _TemperatureState extends State<Temperature> {
             realtimeDatabaseService.streamTemperatureDeviceAuto(),
           ),
           child: Container(
-            width: 160,
+            width: 150,
             height: _containerHeight,
             decoration: BoxDecoration(
               color: Colors.white,

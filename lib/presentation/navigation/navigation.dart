@@ -40,7 +40,7 @@ class _NavigationState extends State<Navigation> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         child: Container(
-          height: 70,
+          height: 60,
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),

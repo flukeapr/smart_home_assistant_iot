@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -14,6 +14,8 @@ class VoiceCommandService {
       RealtimeDatabaseService();
   bool isListening = false;
   String lastWords = "";
+
+  final dio = Dio();
 
   Future<void> initialize() async {
     await _speechToText.initialize();
@@ -46,7 +48,7 @@ class VoiceCommandService {
     lastWords = result.recognizedWords;
     if (result.finalResult && lastWords.isNotEmpty) {
       // เมื่อพูดเสร็จ → ส่งข้อความไปยัง webhook
-      final responseText = await _sendFirebase(lastWords);
+      final responseText = await _sendToN8nWebhook(lastWords);
 
       // ให้ TTS อ่านคำตอบกลับ
       if (responseText.isNotEmpty) {
@@ -58,21 +60,21 @@ class VoiceCommandService {
 
   Future<String> _sendToN8nWebhook(String message) async {
     try {
-      final url = Uri.parse(
-        "https://7ff8550da0df.ngrok-free.app/webhook-test/assistant",
-      );
+      final url = "https://6cab60c23aea.ngrok-free.app/webhook-test/assistant";
 
-      final res = await http.post(
+      final res = await dio.post(
         url,
-        headers: {"Content-Type": "application/json; charset=UTF-8"},
-        body: jsonEncode({"input": message}),
+        options: Options(
+          headers: {"Content-Type": "application/json; charset=UTF-8"},
+        ),
+        data: jsonEncode({"input": message}),
       );
 
-      print("📥 Response body: ${res.body}"); // 👈 Debug log
+      print("📥 Response body: ${res.data}"); // 👈 Debug log
 
       if (res.statusCode == 200) {
         // ✅ ส่งกลับทั้ง body เลย
-        return res.body;
+        return res.data;
       } else {
         return "Webhook error: ${res.statusCode}";
       }
