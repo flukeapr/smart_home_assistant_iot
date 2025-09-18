@@ -39,7 +39,9 @@ class _GoalTrackerState extends State<GoalTracker> {
           builder: (context, maxSnapshot) {
             final usage = usageSnapshot.data ?? 0.0;
             final maximum = maxSnapshot.data ?? 1.0;
-
+            if (usage > maximum) {
+              _realtimeDatabaseService.setDeviceStatus("SavingMode", true);
+            }
             return Container(
               width: double.infinity,
               height: _containerHeight,
