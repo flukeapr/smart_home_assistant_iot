@@ -65,40 +65,43 @@ class _VoiceCommandButtonState extends State<VoiceCommandButton>
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildWave(0, Colors.blueAccent),
-              _buildWave(1, Colors.lightBlue),
-              _buildWave(2, Colors.cyan),
-              const SizedBox(width: 60),
-              _buildWave(2, Colors.cyan),
-              _buildWave(1, Colors.lightBlue),
-              _buildWave(0, Colors.blueAccent),
-            ],
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildWave(0, Colors.blueAccent),
+                _buildWave(1, Colors.lightBlue),
+                _buildWave(2, Colors.cyan),
+                const SizedBox(width: 60),
+                _buildWave(2, Colors.cyan),
+                _buildWave(1, Colors.lightBlue),
+                _buildWave(0, Colors.blueAccent),
+              ],
+            ),
 
-          GestureDetector(
-            onTap: _toggleListening,
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: AppColor.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                _voiceService.isListening ? Icons.mic : Icons.mic_off,
-                color: Colors.white,
-                size: 32,
+            GestureDetector(
+              onTap: _toggleListening,
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: AppColor.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  _voiceService.isListening ? Icons.mic : Icons.mic_off,
+                  color: Colors.white,
+                  size: 32,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

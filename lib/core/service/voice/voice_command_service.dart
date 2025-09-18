@@ -60,7 +60,7 @@ class VoiceCommandService {
 
   Future<String> _sendToN8nWebhook(String message) async {
     try {
-      final url = "https://6cab60c23aea.ngrok-free.app/webhook-test/assistant";
+      final url = "https://supachai6.app.n8n.cloud/webhook/assistant";
 
       final res = await dio.post(
         url,

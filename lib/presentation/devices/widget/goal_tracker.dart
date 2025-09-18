@@ -26,7 +26,7 @@ class _GoalTrackerState extends State<GoalTracker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10,
-      children: [_buildTitle(), _buildProgressContainer()],
+      children: [_buildProgressContainer()],
     );
   }
 
