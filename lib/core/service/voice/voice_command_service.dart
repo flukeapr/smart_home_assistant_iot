@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:smart_home_assistant_iot/core/service/firebase/realtime_database_service.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -10,8 +9,6 @@ class VoiceCommandService {
   final FlutterTts _tts = FlutterTts();
   List<LocaleName> _locales = [];
   LocaleName? _selectedLocale;
-  final RealtimeDatabaseService _realtimeDatabaseService =
-      RealtimeDatabaseService();
   bool isListening = false;
   String lastWords = "";
 
@@ -80,49 +77,6 @@ class VoiceCommandService {
       }
     } catch (e) {
       print("❌ Error sending to n8n webhook: $e");
-      return "$e";
-    }
-  }
-
-  Future<String> _sendFirebase(String message) async {
-    try {
-      final text = message.toLowerCase().trim();
-      if (text.contains("smart home")) {
-        if (text.contains('เปิดไฟ')) {
-          if (text.contains('นอกบ้าน')) {
-            _realtimeDatabaseService.setDeviceStatus("Light2", true);
-            return "เปิดไฟนอกบ้านแล้วครับ";
-          }
-          _realtimeDatabaseService.setDeviceStatus("Light", true);
-          return "เปิดไฟในบ้านแล้วครับ";
-        } else if (text.contains('ปิดไฟ')) {
-          if (text.contains('นอกบ้าน')) {
-            _realtimeDatabaseService.setDeviceStatus("Light2", false);
-            return "ปิดไฟนอกบ้านแล้วครับ";
-          }
-          _realtimeDatabaseService.setDeviceStatus("Light", false);
-          return "ปิดไฟในบ้านแล้วครับ";
-        } else if (text.contains('เปิดพัดลม')) {
-          _realtimeDatabaseService.setDeviceStatus("Fan", true);
-          return "เปิดพัดลมแล้วครับ";
-        } else if (text.contains('ปิดพัดลม')) {
-          _realtimeDatabaseService.setDeviceStatus("Fan", false);
-          return "ปิดพัดลมแล้วครับ";
-        } else if (text.contains('เปิดประตู')) {
-          _realtimeDatabaseService.setDeviceStatus("Door", true);
-          return "เปิดประตูแล้วครับ";
-        } else if (text.contains('ปิดประตู')) {
-          _realtimeDatabaseService.setDeviceStatus("Door", false);
-          return "ปิดประตูแล้วครับ";
-        } else {
-          return "คำสั่งไม่ถูกต้อง กรุณาลองใหม่อีกครั้งครับ";
-        }
-      } else {
-        // return await _sendToN8nWebhook(text);
-        return "คําสั่งไม่ถูกต้อง กรุณาลองใหม่อีกครั้งครับ";
-      }
-    } catch (e) {
-      print("❌ Error sending to Firebase: $e");
       return "$e";
     }
   }

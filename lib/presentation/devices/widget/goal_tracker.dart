@@ -30,10 +30,6 @@ class _GoalTrackerState extends State<GoalTracker> {
     );
   }
 
-  Widget _buildTitle() {
-    return Text("Goal Tracker", style: TextStyle(fontSize: 16));
-  }
-
   Widget _buildProgressContainer() {
     return StreamBuilder<double>(
       stream: _realtimeDatabaseService.streamMonthlyEnergy(),
