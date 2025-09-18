@@ -56,7 +56,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           _buildBody(isOn: isOn),
-                          if (widget.deviceName != "Door")
+                          if (widget.deviceName == "Light" ||
+                              widget.deviceName == "Light2")
                             _buildLevelsDevice(isOn: isOn),
                           _buildStateDevice(isOn: isOn),
                         ],
@@ -107,36 +108,42 @@ class _DeviceDetailState extends State<DeviceDetail> {
 
     return AbsorbPointer(
       absorbing: !isOn,
-      child: SleekCircularSlider(
-        min: 1,
-        max: 3,
-        initialValue: level.toDouble(),
-        appearance: CircularSliderAppearance(
-          size: 250, // ขนาดวงกลม
-          startAngle: 180, // เริ่มครึ่งวงกลมด้านบน
-          angleRange: 180, // โชว์แค่ครึ่งวงกลม
-          customWidths: CustomSliderWidths(
-            trackWidth: 8,
-            progressBarWidth: 8,
-            handlerSize: 12,
-          ),
-          customColors: CustomSliderColors(
-            trackColor: AppColor.lightGrey,
-            progressBarColor: AppColor.primary,
-            dotColor: AppColor.secondary,
-          ),
-        ),
-        onChangeEnd: (double value) {
-          int newLevel = value.round();
-          if (isOn) {
-            realtimeService.setDeviceLeves(widget.deviceName, newLevel);
-          }
-        },
-        innerWidget: (_) => Padding(
-          padding: const EdgeInsets.all(50),
-          child: Iconify(getIconByName(), size: 10, color: AppColor.primary),
-        ),
-      ),
+      child: widget.deviceName == "Light" || widget.deviceName == "Light2"
+          ? SleekCircularSlider(
+              min: 1,
+              max: 3,
+              initialValue: level.toDouble(),
+              appearance: CircularSliderAppearance(
+                size: 250, // ขนาดวงกลม
+                startAngle: 180, // เริ่มครึ่งวงกลมด้านบน
+                angleRange: 180, // โชว์แค่ครึ่งวงกลม
+                customWidths: CustomSliderWidths(
+                  trackWidth: 8,
+                  progressBarWidth: 8,
+                  handlerSize: 12,
+                ),
+                customColors: CustomSliderColors(
+                  trackColor: AppColor.lightGrey,
+                  progressBarColor: AppColor.primary,
+                  dotColor: AppColor.secondary,
+                ),
+              ),
+              onChangeEnd: (double value) {
+                int newLevel = value.round();
+                if (isOn) {
+                  realtimeService.setDeviceLeves(widget.deviceName, newLevel);
+                }
+              },
+              innerWidget: (_) => Padding(
+                padding: const EdgeInsets.all(50),
+                child: Iconify(
+                  getIconByName(),
+                  size: 10,
+                  color: AppColor.primary,
+                ),
+              ),
+            )
+          : Iconify(getIconByName(), size: 150, color: AppColor.primary),
     );
   }
 
