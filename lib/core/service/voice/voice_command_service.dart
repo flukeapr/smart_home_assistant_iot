@@ -1,8 +1,8 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class VoiceCommandService {
   final SpeechToText _speechToText = SpeechToText();
@@ -12,10 +12,12 @@ class VoiceCommandService {
   bool isListening = false;
   String lastWords = "";
 
-  final dio = Dio();
-
   Future<void> initialize() async {
-    await _speechToText.initialize();
+    final available = await _speechToText.initialize();
+    if (!available) {
+      print("Speech recognition not available");
+      return;
+    }
     _locales = await _speechToText.locales();
     var systemLocale = await _speechToText.systemLocale();
 
@@ -44,40 +46,42 @@ class VoiceCommandService {
   void _onSpeechResult(SpeechRecognitionResult result) async {
     lastWords = result.recognizedWords;
     if (result.finalResult && lastWords.isNotEmpty) {
-      // เมื่อพูดเสร็จ → ส่งข้อความไปยัง webhook
-      final responseText = await _sendToN8nWebhook(lastWords);
+      await stopListening();
+      print(lastWords);
 
-      // ให้ TTS อ่านคำตอบกลับ
+      // เรียก TTS หลัง stop เสร็จ
+      final responseText = await _sendToN8nWebhook(lastWords);
       if (responseText.isNotEmpty) {
-        await _tts.stop();
-        await _tts.speak(responseText);
+        Future.microtask(() async {
+          await _tts.stop();
+          await _tts.speak(responseText);
+        });
       }
     }
   }
 
   Future<String> _sendToN8nWebhook(String message) async {
     try {
-      final url = "https://supachai6.app.n8n.cloud/webhook/assistant";
-
-      final res = await dio.post(
-        url,
-        options: Options(
-          headers: {"Content-Type": "application/json; charset=UTF-8"},
-        ),
-        data: jsonEncode({"input": message}),
+      final url = Uri.parse(
+        "https://supachai6.app.n8n.cloud/webhook/assistant",
       );
 
-      print("📥 Response body: ${res.data}"); // 👈 Debug log
+      final res = await http.post(
+        url,
+        headers: {"Content-Type": "application/json; charset=UTF-8"},
+        body: jsonEncode({"input": message}),
+      );
+
+      print("Response body: ${res.body}");
 
       if (res.statusCode == 200) {
-        // ✅ ส่งกลับทั้ง body เลย
-        return res.data;
+        return res.body.toString();
       } else {
-        return "Webhook error: ${res.statusCode}";
+        return "ไม่สามารถส่งคำสั่งได้";
       }
     } catch (e) {
-      print("❌ Error sending to n8n webhook: $e");
-      return "$e";
+      print("Error sending to n8n webhook: $e");
+      return "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้";
     }
   }
 }
