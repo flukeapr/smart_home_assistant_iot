@@ -32,7 +32,7 @@ class _GoalTrackerState extends State<GoalTracker> {
 
   Widget _buildProgressContainer() {
     return StreamBuilder<double>(
-      stream: _realtimeDatabaseService.streamMonthlyEnergy(),
+      stream: _realtimeDatabaseService.streamUsageEnergy(),
       builder: (context, usageSnapshot) {
         return StreamBuilder<double>(
           stream: _realtimeDatabaseService.streamMaxEnergy(),
@@ -71,8 +71,8 @@ class _GoalTrackerState extends State<GoalTracker> {
                     LinearProgressIndicator(
                       value: usage / maximum,
                       backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        AppColor.secondary,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        usage >= maximum ? AppColor.red : AppColor.secondary,
                       ),
                       minHeight: 8,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),

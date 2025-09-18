@@ -43,11 +43,11 @@ class _SavingModeState extends State<SavingMode> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 10,
-      children: [_buildIconShield(), _buildSecurityText()],
+      children: [_buildIconSaving(), _buildSavingText()],
     );
   }
 
-  Widget _buildIconShield() {
+  Widget _buildIconSaving() {
     return const Iconify(
       MaterialSymbols.energy_savings_leaf_outline,
       size: 32,
@@ -55,7 +55,7 @@ class _SavingModeState extends State<SavingMode> {
     );
   }
 
-  Widget _buildSecurityText() {
+  Widget _buildSavingText() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +76,7 @@ class _SavingModeState extends State<SavingMode> {
     );
   }
 
-  Future<void> _toggleSecurityMode(bool value) async {
+  Future<void> _toggleSavingMode(bool value) async {
     try {
       await realtimeService.setDeviceStatus('SavingMode', value);
       setState(() {});
@@ -88,18 +88,31 @@ class _SavingModeState extends State<SavingMode> {
   Widget _buildToggleSwitch() {
     return StreamBuilder<bool>(
       stream: realtimeService.streamDeviceStatus('SavingMode'),
-      builder: (context, snapshot) {
-        final securityOn = snapshot.data ?? false;
-        return FlutterSwitch(
-          width: 47.0,
-          height: 23.0,
-          toggleSize: 18.0,
-          value: securityOn,
-          activeColor: AppColor.primary,
-          inactiveColor: AppColor.lightGrey,
-          borderRadius: 20.0,
-          padding: 2.0,
-          onToggle: _toggleSecurityMode,
+      builder: (context, savingSnapshot) {
+        final savingOn = savingSnapshot.data ?? false;
+        return StreamBuilder(
+          stream: realtimeService.streamMaxEnergy(),
+          builder: (context, maxSnapshot) {
+            final maximum = maxSnapshot.data ?? 1.0;
+            return StreamBuilder(
+              stream: realtimeService.streamUsageEnergy(),
+              builder: (context, usageSnapshot) {
+                final usage = usageSnapshot.data ?? 0.0;
+                return FlutterSwitch(
+                  disabled: usage >= maximum,
+                  width: 47.0,
+                  height: 23.0,
+                  toggleSize: 18.0,
+                  value: savingOn,
+                  activeColor: AppColor.primary,
+                  inactiveColor: AppColor.lightGrey,
+                  borderRadius: 20.0,
+                  padding: 2.0,
+                  onToggle: _toggleSavingMode,
+                );
+              },
+            );
+          },
         );
       },
     );
