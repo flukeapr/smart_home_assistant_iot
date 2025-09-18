@@ -38,7 +38,7 @@ class _NavigationState extends State<Navigation> {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
         child: Container(
           height: 70,
           width: double.infinity,
@@ -46,7 +46,7 @@ class _NavigationState extends State<Navigation> {
             borderRadius: BorderRadius.circular(50),
             border: Border.all(color: AppColor.lightGrey, width: 0.5),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
