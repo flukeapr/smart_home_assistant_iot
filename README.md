@@ -28,7 +28,7 @@ lib
             ├── temperature.dart
             ├── timer_widget.dart
             └── voice_command_button.dart
-esp # IOT code 
+esp32 # IOT code 
 └── esp_smart_home_firebase
     └── esp_smart_home_firebase.ino
 ```
