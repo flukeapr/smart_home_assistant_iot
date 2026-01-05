@@ -13,7 +13,6 @@ dependencies:
   firebase_database: ^12.0.0
   flutter:
     sdk: flutter
-  flutter_dotenv: ^6.0.0
   flutter_switch: ^0.3.2
   iconify_flutter: ^0.0.7
   iconsax: ^0.0.8
@@ -30,6 +29,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - .env
